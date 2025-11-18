@@ -1,0 +1,15 @@
+
+nvgstcapture-1.0
+ls -l /dev/video*
+
+sudo apt install v4l-utils
+v4l2-ctl --list-devices
+
+sudo python /opt/nvidia/jetson-io/jetson-io.py  
+
+|                Configure Jetson 24pin CSI Connector                |
+|                 Configure for compatible hardware                  |
+|                          Camera IMX219-A                           | |                          Save pin changes                          |
+|                Save and reboot to reconfigure pins                 |
+
+
