@@ -9,7 +9,16 @@ sudo python /opt/nvidia/jetson-io/jetson-io.py
 
 |                Configure Jetson 24pin CSI Connector                |
 |                 Configure for compatible hardware                  |
-|                          Camera IMX219-A                           | |                          Save pin changes                          |
+|                          Camera IMX219-A                           |
+|                          Save pin changes                          |
 |                Save and reboot to reconfigure pins                 |
+
+git config --global lassi04kokkonen@gmail.com
+git config --global user.name classikk
+git remote add origin git@github.com:classikk/Jetson.git
+ls -al ~/.ssh
+ssh-keygen -t ed25519 -C "lassi04kokkonen@gmail.com"
+#copy this to git
+cat ~/.ssh/id_ed25519.pub 
 
 
