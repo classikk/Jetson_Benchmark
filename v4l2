@@ -1,0 +1,1 @@
+v4l2-ctl --set-fmt-video=width=1280,height=720,pixelformat=RG10 --set-ctrl frame_rate=60000000 --stream-mmap --stream-count=300 -d /dev/video0
