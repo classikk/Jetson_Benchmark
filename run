@@ -1,6 +1,6 @@
 #!/bin/bash
-g++ -std=c++2a -Wall -Wextra -Wvla -Werror -Wno-error=unknown-pragmas -Wno-error=unused-but-set-variable -Wno-error=unused-local-typedefs -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=unused-variable -Wno-error=unused-parameter -Wno-error=unused-but-set-parameter -Wno-psabi -march=native -fdiagnostics-color=never -march=native -mavx512f -mavx512vl -mavx512bw -mavx512dq -fopenmp -fsanitize=address -O3 -o ./camera ./camera.cc
-g++ -S -masm=intel -fverbose-asm  -fsanitize=address -march=native -mavx512f -mavx512bw -mavx512vl -mavx512dq -fopenmp -O3 -o ./Assembly.txt ./camera.cc
+g++ -std=c++2a -march=native -fopenmp -fsanitize=address -O3 -o ./camera ./camera.cc
+g++ -S   -fsanitize=address -march=native  -fopenmp -O3 -o ./Assembly.txt ./camera.cc
 ./camera
 
-
+#-mavx512f -mavx512vl -mavx512bw -mavx512dq -masm=intel -fverbose-asm -Wall -Wextra -Wvla -Werror -Wno-error=unknown-pragmas -Wno-error=unused-but-set-variable -Wno-error=unused-local-typedefs -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=unused-variable -Wno-error=unused-parameter -Wno-error=unused-but-set-parameter -Wno-psabi -march=native -fdiagnostics-color=never

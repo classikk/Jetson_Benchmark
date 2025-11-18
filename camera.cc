@@ -19,16 +19,17 @@ int main() {
         perror("Cannot open device");
         return 1;
     }
-
-    // --- Set controls ---
-    v4l2_control ctrl;
-    ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
-    ctrl.value = 4;
-    if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
-
-    ctrl.id = V4L2_CID_BYPASS_MODE; // bypass_mode
-    ctrl.value = 0;
-    if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting bypass_mode failed");
+    //#define V4L2_CID_SENSOR_MODE (0x009a2008);
+    //// --- Set controls ---
+    //v4l2_control ctrl;
+    //ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
+    //ctrl.value = 4;
+    //if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
+//
+    //#define V4L2_CID_BYPASS_MODE (0x009a2064);
+    //ctrl.id = V4L2_CID_BYPASS_MODE; // bypass_mode
+    //ctrl.value = 0;
+    //if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting bypass_mode failed");
 
     // --- Set format ---
     v4l2_format fmt;
@@ -57,7 +58,7 @@ int main() {
     }
 
     Buffer* buffers = new Buffer[req.count];
-    for (int i = 0; i < req.count; i++) {
+    for (__u32 i = 0; i < req.count; i++) {
         v4l2_buffer buf;
         memset(&buf, 0, sizeof(buf));
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -79,7 +80,7 @@ int main() {
     }
 
     // --- Queue buffers ---
-    for (int i = 0; i < req.count; i++) {
+    for (__u32 i = 0; i < req.count; i++) {
         v4l2_buffer buf;
         memset(&buf, 0, sizeof(buf));
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -97,8 +98,8 @@ int main() {
 
     std::ofstream outfile("FILE.raw", std::ios::binary);
 
-    // --- Capture 600 frames ---
-    for (int frame = 0; frame < 600; frame++) {
+    // --- Capture 120 frames ---
+    for (int frame = 0; frame < 120; frame++) {
         v4l2_buffer buf;
         memset(&buf, 0, sizeof(buf));
         buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -120,7 +121,7 @@ int main() {
     if (ioctl(fd, VIDIOC_STREAMOFF, &type) < 0) perror("Stream off failed");
 
     // --- Cleanup ---
-    for (int i = 0; i < req.count; i++) {
+    for (__u32 i = 0; i < req.count; i++) {
         munmap(buffers[i].start, buffers[i].length);
     }
     delete[] buffers;
