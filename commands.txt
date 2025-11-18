@@ -21,4 +21,4 @@ ssh-keygen -t ed25519 -C "lassi04kokkonen@gmail.com"
 #copy this to git
 cat ~/.ssh/id_ed25519.pub 
 
-
+v4l2-ctl --list-formats-ext
