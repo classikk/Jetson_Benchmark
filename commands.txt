@@ -22,3 +22,6 @@ ssh-keygen -t ed25519 -C "lassi04kokkonen@gmail.com"
 cat ~/.ssh/id_ed25519.pub 
 
 v4l2-ctl --list-formats-ext
+
+find /usr/include -name opencv.hpp
+

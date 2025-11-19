@@ -12,6 +12,8 @@ struct RG10 {
 
     RG10(char* start,int width,int height)
         : start(start),width(width),height(height),size(pix_width*width*height) {}
+
+    
 };
 
 struct RGB888 {
