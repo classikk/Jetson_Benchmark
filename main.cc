@@ -1,12 +1,11 @@
 #include <iostream>
 #include <thread>
-#include "timer.h"
+#include "util/timer.h"
 
 using namespace std;
 
 int main() {
-    Timer t;
-    this_thread::sleep_for(std::chrono::seconds(2));
+    Timer t;    
     t.time();
     return 0;
 }
