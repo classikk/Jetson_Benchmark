@@ -2,20 +2,21 @@
 #define DISPLAY_H
 //sudo apt install libopencv-dev
 #include <opencv2/opencv.hpp>
-//#include "util/image.h"
+#include "image.h"
 
-//void display(RGB888 image) {
-//    // Wrap buffer into cv::Mat (no copy, just a header around your data)
-//    cv::Mat img(image.height, image.width, CV_8UC3, image.start);
-//
-//    // OpenCV uses BGR order by default, so if your buffer is RGB, convert:
-//    cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
-//
-//    // Show the image
-//    cv::imshow("Image Window", img);
-//    cv::waitKey(0);
-//}
+void display(RGB888 image) {
 
+    // Wrap buffer into cv::Mat (no copy, just a header around your data)
+    cv::Mat img(image.height, image.width, CV_8UC3, image.start);
+
+    // OpenCV uses BGR order by default, so if your buffer is RGB, convert:
+    cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
+
+    // Show the image
+    cv::imshow("Image Window", img);
+    cv::waitKey(0);
+}
+/*
 void display() {
     int width = 640;   // your image width
     int height = 480;  // your image height
@@ -42,5 +43,5 @@ void display() {
 
     delete[] buffer;
 }
-
+*/
 #endif
