@@ -1,2 +1,3 @@
-v4l2-ctl -d /dev/video0  --stream-mmap --stream-count=120 --stream-to=video.raw
-#-csensor_mode=4 --set-fmt-video=width=1280,height=720,pixelformat=RG10 --set-ctrl=bypass_mode=0,frame_rate=60000000
+v4l2-ctl -d /dev/video0 -csensor_mode=5 --set-fmt-video=width=1280,height=720,pixelformat=RG10 --stream-mmap --stream-count=120 --stream-to=video.raw
+#  --set-ctrl=bypass_mode=0,frame_rate=60000000
+#-csensor_mode=5 4 and 5 are fast 0 is slow but works and 1 and 2 doesn't work

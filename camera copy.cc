@@ -19,12 +19,12 @@ int main() {
         perror("Cannot open device");
         return 1;
     }
-    #define V4L2_CID_SENSOR_MODE (0x009a2008);
-    // --- Set controls ---
-    v4l2_control ctrl;
-    ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
-    ctrl.value = 4;
-    if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
+    //#define V4L2_CID_SENSOR_MODE (0x009a2008);
+    //// --- Set controls ---
+    //v4l2_control ctrl;
+    //ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
+    //ctrl.value = 4;
+    //if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
 //
     //#define V4L2_CID_BYPASS_MODE (0x009a2064);
     //ctrl.id = V4L2_CID_BYPASS_MODE; // bypass_mode
@@ -35,10 +35,8 @@ int main() {
     v4l2_format fmt;
     memset(&fmt, 0, sizeof(fmt));
     fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-    constexpr int width  = 1280;
-    constexpr int height = 720;
-    fmt.fmt.pix.width  = width ;
-    fmt.fmt.pix.height = height;
+    fmt.fmt.pix.width = 1280;
+    fmt.fmt.pix.height = 720;
     fmt.fmt.pix.pixelformat = v4l2_fourcc('R','G','1','0'); // RG10
     fmt.fmt.pix.field = V4L2_FIELD_NONE;
 
@@ -79,6 +77,15 @@ int main() {
             perror("mmap failed");
             return 1;
         }
+    }
+
+    // --- Queue buffers ---
+    for (__u32 i = 0; i < req.count; i++) {
+        v4l2_buffer buf;
+        memset(&buf, 0, sizeof(buf));
+        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        buf.memory = V4L2_MEMORY_MMAP;
+        buf.index = i;
         if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Queue buffer failed");
     }
 
@@ -102,21 +109,9 @@ int main() {
             perror("Dequeue buffer failed");
             continue;
         }
-        int image_size = 3*height*width;
-        char* result = new char[image_size];
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                int pixel = y*width+x;
-                char* write_to = result + 3*pixel;
-                write_to[0] = (((short*)buffers[buf.index].start)[pixel]);
-                write_to[1] = (((short*)buffers[buf.index].start)[pixel]);
-                write_to[2] = (((short*)buffers[buf.index].start)[pixel]);
-            }
-        }
 
-        outfile.write(result, image_size);
-        //outfile.write((char*)buffers[buf.index].start, buf.bytesused);
-        delete[] result;
+        outfile.write((char*)buffers[buf.index].start, buf.bytesused);
+
         if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
     }
 
