@@ -19,13 +19,13 @@ int main() {
         perror("Cannot open device");
         return 1;
     }
-    #define V4L2_CID_SENSOR_MODE (0x009a2008);
-    // --- Set controls ---
-    v4l2_control ctrl;
-    ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
-    ctrl.value = 4;
-    if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
-//
+    //#define V4L2_CID_SENSOR_MODE (0x009a2008);
+    //// --- Set controls ---
+    //v4l2_control ctrl;
+    //ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
+    //ctrl.value = 4;
+    //if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
+
     //#define V4L2_CID_BYPASS_MODE (0x009a2064);
     //ctrl.id = V4L2_CID_BYPASS_MODE; // bypass_mode
     //ctrl.value = 0;

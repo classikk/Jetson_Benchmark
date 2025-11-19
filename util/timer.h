@@ -8,7 +8,7 @@ using namespace std;
 struct Timer {
     std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
     
-    void time(){
+    inline void time(){
         auto end = std::chrono::steady_clock::now();
         cout << "[" << (double)(end-start).count()/1000000000 << "s]"<< endl;
     }
