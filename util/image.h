@@ -31,54 +31,11 @@ struct RGB888 {
     RGB888(char* start,int width,int height)
         : start(start),width(width),height(height),size(pix_width*width*height) {}
 
-    BGR888 toBGR(char* newstart) const;
 };
-
-struct BGR888 {
-    char* start;
-    const int width;
-    const int height;
-    const int pix_width = 3;
-    const int size = pix_width*width*height;
-
-    BGR888(char* start,int width,int height)
-        : start(start),width(width),height(height),size(pix_width*width*height) {}
-    
-    RGB888 toRGB(char* newstart) const;
-};
-
-
-BGR888 RGB888::toBGR(char* newstart) const {
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
-            int index = pix_width*(x+width*y);
-            newstart[index]   = start[index+2];
-            newstart[index+1] = start[index+1];
-            newstart[index+2] = start[index];
-        }
-    }
-    return BGR888(newstart,width,height);
-}
-
-RGB888 BGR888::toRGB(char* newstart) const {
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
-            int index = pix_width*(x+width*y);
-            newstart[index]   = start[index+2];
-            newstart[index+1] = start[index+1];
-            newstart[index+2] = start[index];
-        }
-    }
-    return RGB888(newstart,width,height);
-}
 
 RGB888 RG10::toRGB(char* newstart) const {
     for(int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
-            int index = pix_width*(x+width*y);
-            newstart[index]   = start[index+2];
-            newstart[index+1] = start[index+1];
-            newstart[index+2] = start[index];
         }
     }
     return RGB888(newstart,width,height);

@@ -8,9 +8,9 @@ using namespace std;
 struct Timer {
     std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
     
-    inline void time(){
+    inline void time(const char* msg){
         auto end = std::chrono::steady_clock::now();
-        cout << "[" << (double)(end-start).count()/1000000000 << "s]"<< endl;
+        cout << "[" << (double)(end-start).count()/1000000000 << "s]"<< msg << endl;
     }
 };
 
