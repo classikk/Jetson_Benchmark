@@ -12,6 +12,10 @@ struct Timer {
         auto end = std::chrono::steady_clock::now();
         cout << "[" << (double)(end-start).count()/1000000000 << "s]"<< msg << endl;
     }
+    inline double seconds(){
+        auto end = std::chrono::steady_clock::now();
+        return (double)(end-start).count()/1000000000;
+    }
 };
 
 #endif
