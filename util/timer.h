@@ -25,6 +25,11 @@ struct Timer {
         auto end = std::chrono::steady_clock::now();
         cout << "[" << (double)(end-start).count()/1000000000 << "s]\t[dif " << time_split() << "s]\t " << msg << endl;
     }
+    
+    inline void time_stamp(){
+        auto end = std::chrono::steady_clock::now();
+        cout << "[" << (double)(end-start).count()/1000000000 << "s]\t[dif " << time_split() << "s]" << endl;
+    }
 };
 
 #endif
