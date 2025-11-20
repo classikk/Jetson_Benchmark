@@ -96,6 +96,7 @@ struct Streamer {
         RG10 rawImage((char*)buffers[buf.index].start,width,height);
         return rawImage;
     }
+    
     void record_new_image() {
         v4l2_buffer buf;
         memset(&buf, 0, sizeof(buf));
@@ -116,55 +117,3 @@ struct Streamer {
         close(fd);
     }
 };
-
-
-/*
-RG10 get_frame() {
-
-    std::ofstream outfile("FILE.raw", std::ios::binary);
-
-    // --- Capture 120 frames ---
-    for (int frame = 0; frame < 120; frame++) {
-        v4l2_buffer buf;
-        memset(&buf, 0, sizeof(buf));
-        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        buf.memory = V4L2_MEMORY_MMAP;
-
-        if (ioctl(fd, VIDIOC_DQBUF, &buf) < 0) {
-            perror("Dequeue buffer failed");
-            continue;
-        }
-        int image_size = 3*height*width;
-        char* result = new char[image_size];
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                int pixel = y*width+x;
-                char* write_to = result + 3*pixel;
-                write_to[0] = (((short*)buffers[buf.index].start)[pixel]);
-                write_to[1] = (((short*)buffers[buf.index].start)[pixel]);
-                write_to[2] = (((short*)buffers[buf.index].start)[pixel]);
-            }
-        }
-
-        outfile.write(result, image_size);
-        //outfile.write((char*)buffers[buf.index].start, buf.bytesused);
-        delete[] result;
-        if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
-    }
-
-    outfile.close();
-
-
-}
-*/
-    //#define V4L2_CID_SENSOR_MODE (0x009a2008);
-    //// --- Set controls ---
-    //v4l2_control ctrl;
-    //ctrl.id = V4L2_CID_SENSOR_MODE; // sensor_mode
-    //ctrl.value = 4;
-    //if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting sensor_mode failed");
-
-    //#define V4L2_CID_BYPASS_MODE (0x009a2064);
-    //ctrl.id = V4L2_CID_BYPASS_MODE; // bypass_mode
-    //ctrl.value = 0;
-    //if (ioctl(fd, VIDIOC_S_CTRL, &ctrl) < 0) perror("Setting bypass_mode failed");
