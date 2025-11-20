@@ -12,6 +12,7 @@ int main() {
     Streamer video_stream;
     if (!video_stream.init()){
         cout << "failed initialisation" << endl;
+        return -1;
     };
     int total = 0;
     char* rgb = new char[3*1280*720];
@@ -28,7 +29,7 @@ int main() {
         //t.time_stamp("3");
         display(frame);
         //t.time_stamp("4");   
-        cout << total/t.seconds() << "fps" << endl;
+        //cout << total/t.seconds() << "fps" << endl;
     }
     cout << total/t.seconds() << "fps" << endl;
     delete [] rgb;
@@ -37,27 +38,3 @@ int main() {
 
     return 0;
 }
-
-/*
-
-    int width = 640;   // your image width
-    int height = 480;  // your image height
-
-    this_thread::sleep_for(std::chrono::seconds(2));
-    // Suppose this is your raw RGB888 buffer in RAM
-    delete [] buffer;
-    char* buffer = new char[width * height * 3];
-    RGB888 img = RGB888{buffer,width,height};
-    for (int r = 0; r < 255; r++){
-        Timer t;
-        for (int i = 0; i < width * height; i++) {
-            buffer[3*i + 0] = r; 
-            buffer[3*i + 1] = 0;   
-            buffer[3*i + 2] = 0;   
-        }
-        t.time("before");
-        display(img);
-        t.time("after");
-    }
-    t.time("");
-*/

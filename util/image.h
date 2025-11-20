@@ -45,8 +45,8 @@ struct RG10 {
     RG10(char* start, int width, int height)
         : start(start),info(width,height,pix_width) {}
 
-    RG10(char* start, IMG_info info)
-        : start(start),info(info) {}
+    RG10(char* start, IMG_info new_info)
+        : start(start),info(new_info) {info.pix_width = pix_width;}
 
     RGB888 toRGB(char* newstart) const;//char* newstart
     char* newCharArrToRGB() const;
@@ -60,8 +60,8 @@ struct RGB888 {
     RGB888(char* start, int width, int height)
         : start(start),info(width,height,pix_width) {}
 
-    RGB888(char* start, IMG_info info)
-        : start(start),info(info) {}
+    RGB888(char* start, IMG_info new_info)
+        : start(start),info(new_info) {info.pix_width = pix_width;}
 
 };
 
