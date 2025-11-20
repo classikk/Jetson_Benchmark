@@ -13,18 +13,25 @@ int main() {
     if (!video_stream.init()){
         cout << "failed initialisation" << endl;
     };
+    int total = 0;
+    char* rgb = new char[3*1280*720];
     while (t.seconds() < 10.0){
-        t.time("");
+        total += 1;
         RG10 raw_frame = video_stream.get_frame();
-        t.time("");
-        RGB888 frame = raw_frame.toRGB();
-        t.time("");
+        if (rgb == NULL){
+            rgb = raw_frame.newCharArrToRGB();
+        }
+        //t.time_stamp("1");
+        RGB888 frame = raw_frame.toRGB(rgb);
+        //t.time_stamp("2");
+        video_stream.record_new_image();
+        //t.time_stamp("3");
         display(frame);
-        delete [] frame.start;
-        
+        //t.time_stamp("4");   
+        cout << total/t.seconds() << "fps" << endl;
     }
-    t.time("");
-
+    delete [] rgb;
+    
     video_stream.cleanUp();
 
     return 0;

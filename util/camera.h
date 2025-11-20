@@ -94,9 +94,14 @@ struct Streamer {
             perror("Dequeue buffer failed");
         }
         RG10 rawImage((char*)buffers[buf.index].start,width,height);
-
-        if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
         return rawImage;
+    }
+    void record_new_image() {
+        v4l2_buffer buf;
+        memset(&buf, 0, sizeof(buf));
+        buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        buf.memory = V4L2_MEMORY_MMAP;
+        if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
     }
 
     void cleanUp() {
