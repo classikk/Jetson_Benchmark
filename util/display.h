@@ -13,7 +13,7 @@ void display(RGB888 image) {
     //cv::cvtColor(img, img, cv::COLOR_RGB2BGR);
     //cv::imshow("Image Window", img);
     
-    cv::Mat imgRGB(image.height, image.width, CV_8UC3, image.start);
+    cv::Mat imgRGB(image.info.height, image.info.width, CV_8UC3, image.start);
 
     // Display correctly by converting once into BGR
     cv::Mat imgBGR;
@@ -26,7 +26,7 @@ void display(RGB888 image) {
 
 void display(RG10 image) {
 
-    cv::Mat raw(image.height, image.width, CV_16UC1, image.start);
+    cv::Mat raw(image.info.height, image.info.width, CV_16UC1, image.start);
 
     // Display correctly by converting once into BGR
     cv::Mat bgr;
