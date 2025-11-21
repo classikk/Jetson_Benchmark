@@ -22,14 +22,15 @@ int main() {
         if (rgb == NULL){
             rgb = raw_frame.newCharArrToRGB();
         }
+        display(raw_frame);
         //t.time_stamp("1");
-        RGB888 frame = raw_frame.toRGB(rgb);
+        //RGB888 frame = raw_frame.toRGB(rgb);
         //t.time_stamp("2");
-        video_stream.record_new_image();
+        //video_stream.record_new_image();
         //t.time_stamp("3");
-        display(frame);
+        //display(frame);
         //t.time_stamp("4");   
-        //cout << total/t.seconds() << "fps" << endl;
+        cout << total/t.seconds() << "fps" << endl;
     }
     cout << total/t.seconds() << "fps" << endl;
     delete [] rgb;

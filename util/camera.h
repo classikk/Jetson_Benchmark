@@ -94,6 +94,7 @@ struct Streamer {
             perror("Dequeue buffer failed");
         }
         RG10 rawImage((char*)buffers[buf.index].start,width,height);
+        //if (rawImage.info.size() != buffers[buf.index].length)
         return rawImage;
     }
     
