@@ -53,6 +53,7 @@ struct RG10 {
     RGB888 toRGB(char* newstart) const;
     BW8 toBW(char* newstart) const;
     char* newCharArrToRGB() const;
+    char* newCharArrToBW() const;
 };
 
 struct RGB888 {
@@ -111,6 +112,10 @@ BW8 RG10::toBW(char* newstart) const {
 }
 char* RG10::newCharArrToRGB() const {
     char* a = new char[RGB888::pix_width*info.width*info.height]; 
+    return a; 
+}
+char* RG10::newCharArrToBW() const {
+    char* a = new char[BW8::pix_width*info.width*info.height]; 
     return a; 
 }
 #endif

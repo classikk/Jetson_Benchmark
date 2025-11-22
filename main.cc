@@ -15,7 +15,7 @@ int main() {
         return -1;
     };
     
-    char* rgb = new char[3*1280*720];
+    char* rgb = video_stream.get_frame().newCharArrToRGB();
     while (t.seconds() < 30.0){
         t.benchmark(0);
         RG10 raw_frame = video_stream.get_frame();
@@ -36,7 +36,3 @@ int main() {
 
     return 0;
 }
-
-//if (rgb == NULL){
-//    rgb = raw_frame.newCharArrToRGB();
-//}
