@@ -8,13 +8,6 @@
 #include <cstring>
 #include "image.h"
 
-
-struct Raw_Image_Buffer {
-    void* start;
-    size_t length;
-};
-
-
 class Streamer {
 private:
     const char* dev_name = "/dev/video0";
@@ -51,8 +44,7 @@ public:
         if (ioctl(fd, VIDIOC_DQBUF, &buf) < 0) {
             perror("Dequeue buffer failed");
         }
-        RG10 rawImage((char*)buffers[buf.index].start,width,height);
-        return rawImage;
+        return buffers[buf.index];
     }
     
     void record_new_image() {
