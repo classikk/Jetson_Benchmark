@@ -6,6 +6,7 @@ using namespace std;
 
 struct RG10  ;
 struct RGB888;
+struct BW8;
 struct IMG_info {
     int   width           ;
     int   height          ;
@@ -49,7 +50,8 @@ struct RG10 {
     RG10()
         : start(start),info(info) {info.pix_width = pix_width;}
 
-    RGB888 toRGB(char* newstart) const;//char* newstart
+    RGB888 toRGB(char* newstart) const;
+    BW8 toBW(char* newstart) const;
     char* newCharArrToRGB() const;
 };
 
@@ -63,11 +65,23 @@ struct RGB888 {
 
     RGB888(char* start, IMG_info new_info)
         : start(start),info(new_info) {info.pix_width = pix_width;}
-
 };
-#include <thread>
+
+struct BW8 {
+    char* start;
+    IMG_info info;
+    static constexpr int pix_width = 1;
+
+    BW8(char* start, int width, int height)
+        : start(start),info(width,height,pix_width) {}
+
+    BW8(char* start, IMG_info new_info)
+        : start(start),info(new_info) {info.pix_width = pix_width;}
+};
+
+//#include <thread>
 RGB888 RG10::toRGB(char* newstart) const { 
-    //std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     //return RGB888(newstart,info); 
     #pragma omp parallel for
     for(int y = 0; y < info.height; y++){
@@ -80,6 +94,20 @@ RGB888 RG10::toRGB(char* newstart) const {
         }
     }
     return RGB888(newstart,info); 
+}
+//#include <thread>
+BW8 RG10::toBW(char* newstart) const { 
+    //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    //return RGB888(newstart,info); 
+    #pragma omp parallel for
+    for(int y = 0; y < info.height; y++){
+        for(int x = 0; x < info.width; x++){
+            int pixel = y*info.width+x;
+            char* write_to = (char*)(newstart + BW8::pix_width*pixel);
+            write_to[0] = (char)(((short*)(start+2*pixel))[0]>>2);
+        }
+    }
+    return BW8(newstart,info); 
 }
 char* RG10::newCharArrToRGB() const {
     char* a = new char[RGB888::pix_width*info.width*info.height]; 

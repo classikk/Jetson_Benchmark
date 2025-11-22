@@ -16,11 +16,12 @@ void display(RGB888 image) {
     cv::Mat imgRGB(image.info.height, image.info.width, CV_8UC3, image.start);
 
     // Display correctly by converting once into BGR
-    cv::Mat imgBGR;
-    cv::cvtColor(imgRGB, imgBGR, cv::COLOR_RGB2BGR);
+    //cv::Mat imgBGR;
+    //cv::cvtColor(imgRGB, imgBGR, cv::COLOR_RGB2BGR);
 
     // Show the image
-    cv::imshow("RGB888", imgBGR);
+    //cv::imshow("RGB888", imgBGR);
+    cv::imshow("RGB888", imgRGB);
     cv::pollKey();
 }
 
@@ -32,12 +33,18 @@ void display(RG10 image) {
     cv::Mat bgr;
     cv::cvtColor(raw, bgr, cv::COLOR_BayerRG2BGR);
 
-    cv::Mat enhanced;
-    bgr.convertTo(enhanced, -1, 3.5, 100);
+    //cv::Mat enhanced;
+    //bgr.convertTo(enhanced, -1, 3.5, 100);
 
 
     // Show the image
-    cv::imshow("RG10", enhanced);
+    cv::imshow("RG10", bgr);
+    cv::pollKey();
+}
+
+void display(BW8 image) {
+    cv::Mat imgBW8(image.info.height, image.info.width, CV_8UC1, image.start);
+    cv::imshow("BW8", imgBW8);
     cv::pollKey();
 }
 #endif

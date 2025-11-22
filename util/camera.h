@@ -36,7 +36,8 @@ public:
             perror("Dequeue buffer failed");
         }
 
-        cout << "Index: "<< buf.index << endl;
+        //cout << "Index: "<< buf.index << endl;
+        record_new_image();
         return buffers[buf.index];
     }
     
