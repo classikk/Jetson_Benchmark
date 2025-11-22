@@ -11,6 +11,7 @@ struct Timer {
     std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> split = std::chrono::steady_clock::now();
     std::chrono::time_point<std::chrono::steady_clock> benchMark = std::chrono::steady_clock::now();
+    int total_frames = 0;
     std::vector<double> arr;
     int steps = -1;
     int n = 0;
@@ -48,6 +49,9 @@ struct Timer {
         for (int i = 0; i <= steps; i++){
             cout << "[" << arr[i]/n << "s]\taverage on [" << i << "]" << endl;
         }
+    }
+    inline void fps(){
+        cout << total_frames/seconds() << "fps" << endl;
     }
 };
 
