@@ -14,42 +14,39 @@ private:
     const int width  = 1280;
     const int height = 720;
     int n_buffers = 2;
+    int next_frame_index = 0;
     int fd;
     int type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     v4l2_format fmt;
     RG10* buffers = new RG10[n_buffers]; 
     bool stream_is_on = false;
-
+    bool stream_to_gpu_pointer;
 public:
-    bool init(){
-        if (init_steps()){
-            return true;
-        }
-        cleanUp();
-        return false;
-    }
-    bool init_steps(){
-        if (!init_device()) return false;
-        if (!init_fmt()) return false;
-        if (!init_request()) return false;
-        set_image_info_RG10();
-        if (!init_map_CPU()) return false;
-        if (!init_start_stream()) return false;
-        return true;
+    bool init_success = false;
+
+    Streamer(bool stream_to_gpu_pointer) : stream_to_gpu_pointer(stream_to_gpu_pointer){
+        init_success = init();
     }
 
     RG10 get_frame() {
         v4l2_buffer buf = get_v4l2_buffer();
+        buf.index = next_frame_index;
 
         if (ioctl(fd, VIDIOC_DQBUF, &buf) < 0) {
             perror("Dequeue buffer failed");
         }
+
+        cout << "Index: "<< buf.index << endl;
         return buffers[buf.index];
     }
     
     void record_new_image() {
-        v4l2_buffer buf = get_v4l2_buffer();
+        
+        v4l2_buffer buf = get_v4l2_buffer(); 
+        next_frame_index = (next_frame_index+1)%n_buffers;
+        buf.index = next_frame_index;
         if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
+
     }
 
     void cleanUp() {
@@ -59,14 +56,37 @@ public:
         }
         
         // --- Cleanup ---
-        for (__u32 i = 0; i < n_buffers; i++) {
-            munmap(buffers[i].start, buffers[i].info.size());
-        }
+        //for (__u32 i = 0; i < n_buffers; i++) {
+        //    munmap(buffers[i].start, buffers[i].info.size());
+        //}
         delete[] buffers;
         close(fd);
     }
 
 private:
+
+    bool init(){
+        if (init_steps()){
+            return true;
+        }
+        cleanUp();
+        return false;
+    }
+
+    bool init_steps(){
+        if (!init_device()) return false;
+        if (!init_fmt()) return false;
+        if (!init_request()) return false;
+        set_image_info_RG10();
+        if (stream_to_gpu_pointer){
+
+        } else {
+            if (!init_map_CPU()) return false;
+        }
+        if (!init_start_stream()) return false;
+        return true;
+    }
+
     bool init_device(){
         fd = open(dev_name, O_RDWR);
         if (fd < 0) {
@@ -119,6 +139,7 @@ private:
         }
         return true;
     }
+
     bool init_map_CPU_buf(int i){
         v4l2_buffer buf = get_v4l2_buffer();
         buf.index = i;
@@ -130,8 +151,8 @@ private:
 
         if (buffers[i].info.size() != buf.length) {
             perror("Incorrect image size");
-            cout << "Expecting total of bytes = " << buffers[i].info.size() << endl;
-            cout << "Recieved  total of bytes = " << buf.length             << endl;
+            cout << "Expecting image with total size of bytes = " << buffers[i].info.size() << endl;
+            cout << "Recieved  image with total size of bytes = " << buf.length             << endl;
             return false;
         }
 
@@ -147,6 +168,7 @@ private:
         }
         return true;
     }
+    
     bool init_start_stream(){
         // --- Start streaming ---
         if (ioctl(fd, VIDIOC_STREAMON, &type) < 0) {

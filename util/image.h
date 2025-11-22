@@ -65,8 +65,10 @@ struct RGB888 {
         : start(start),info(new_info) {info.pix_width = pix_width;}
 
 };
-
+#include <thread>
 RGB888 RG10::toRGB(char* newstart) const { 
+    //std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    //return RGB888(newstart,info); 
     #pragma omp parallel for
     for(int y = 0; y < info.height; y++){
         for(int x = 0; x < info.width; x++){
