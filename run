@@ -4,13 +4,20 @@ set -e
 g++ -std=c++2a -march=native -fopenmp -Wno-deprecated-enum-enum-conversion -fsanitize=address -Wno-error=deprecated-enum-enum-conversion -O3 -o ./main ./main.cc \
     -I/usr/include/opencv4 \
     -L/usr/lib \
-    -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc 
+    -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc \
+    -I/usr/local/cuda/include \
+    -L/usr/local/cuda/lib64 -lcudart
 g++ -S         -march=native -fopenmp -Wno-deprecated-enum-enum-conversion -Wno-error=deprecated-enum-enum-conversion -O3 -o ./Assembly.txt ./main.cc \
     -I/usr/include/opencv4 \
     -L/usr/lib \
-    -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc 
+    -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc \
+    -I/usr/local/cuda/include \
+    -L/usr/local/cuda/lib64 -lcudart
 ./main
 
 #-mavx512f  -fopenmp  -mavx512vl -mavx512bw -mavx512dq -masm=intel -fverbose-asm -Wall -Wextra -Wvla -Werror -Wno-error=unknown-pragmas -Wno-error=unused-but-set-variable -Wno-error=unused-local-typedefs -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=unused-variable -Wno-error=unused-parameter -Wno-error=unused-but-set-parameter -Wno-psabi -march=native -fdiagnostics-color=never
 #
 #-fsanitize=address
+#
+#    -I/usr/local/cuda/include \
+#    -L/usr/local/cuda/lib64 -lcudart

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <thread>
 #include "util/timer.h"
 #include "util/image.h"
 #include "util/display.h"

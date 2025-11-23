@@ -96,7 +96,11 @@ RGB888 RG10::toRGB(char* newstart) const {
     }
     return RGB888(newstart,info); 
 }
+
+//extern void process_gpu(RG10 img,char* result); //#include "GPU.cu"
+
 //#include <thread>
+//#include "GPU.cu"
 BW8 RG10::toBW(char* newstart) const { 
     //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     //return RGB888(newstart,info); 
@@ -108,6 +112,7 @@ BW8 RG10::toBW(char* newstart) const {
             write_to[0] = (char)(((short*)(start+2*pixel))[0]>>2);
         }
     }
+    //process_gpu(this[0],newstart);
     return BW8(newstart,info); 
 }
 char* RG10::newCharArrToRGB() const {

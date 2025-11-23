@@ -41,14 +41,6 @@ public:
         return buffers[buf.index];
     }
     
-    void record_new_image() {
-        
-        v4l2_buffer buf = get_v4l2_buffer(); 
-        next_frame_index = (next_frame_index+1)%n_buffers;
-        buf.index = next_frame_index;
-        if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
-
-    }
 
     void cleanUp() {
         // --- Stop streaming ---
@@ -179,6 +171,15 @@ private:
         stream_is_on = true;
         return true;
     }
+    
+    void record_new_image() {
+        v4l2_buffer buf = get_v4l2_buffer(); 
+        next_frame_index = (next_frame_index+1)%n_buffers;
+        buf.index = next_frame_index;
+        if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) perror("Requeue buffer failed");
+
+    }
+
     v4l2_buffer get_v4l2_buffer() {
         v4l2_buffer buf;
         memset(&buf, 0, sizeof(buf));
