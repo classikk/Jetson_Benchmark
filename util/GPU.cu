@@ -37,7 +37,7 @@ static inline int divup(int a, int b) {
 constexpr int short_vec = 4;
 constexpr int char_vec = 8;
 
-typedef struct { char x, y, z, w, a, b, c, d; } char8;
+typedef struct { signed char x, y, z, w, a, b, c, d; } char8;
 __global__ void RG10toBW8(short* from, char* to,int width, int height){
     int x = threadIdx.x+blockDim.x*blockIdx.x;
     int y = threadIdx.y+blockDim.y*blockIdx.y;
@@ -52,10 +52,10 @@ __global__ void RG10toBW8_modulo4(short* from, char* to,int width, int height){
     int loc = x+width*y;
     short4 vecInput_1 = ((const short4*)(&from[loc]))[0];
     char4 write{
-        (unsigned char)((vecInput_1.x)>>2),
-        (unsigned char)((vecInput_1.y)>>2),
-        (unsigned char)((vecInput_1.z)>>2),
-        (unsigned char)((vecInput_1.w)>>2)
+        static_cast<signed char>((vecInput_1.x)>>2),
+        static_cast<signed char>((vecInput_1.y)>>2),
+        static_cast<signed char>((vecInput_1.z)>>2),
+        static_cast<signed char>((vecInput_1.w)>>2)
     };
     ((char4*)(&to[loc]))[0] = write;
 }
@@ -67,14 +67,14 @@ __global__ void RG10toBW8_modulo8(short* from, char* to,int width, int height){
     short4 vecInput_1 = ((const short4*)(&from[loc]))[0];
     short4 vecInput_2 = ((const short4*)(&from[loc]))[1];
     char8 write{
-        (unsigned char)((vecInput_1.x)>>2),
-        (unsigned char)((vecInput_1.y)>>2),
-        (unsigned char)((vecInput_1.z)>>2),
-        (unsigned char)((vecInput_1.w)>>2),
-        (unsigned char)((vecInput_2.x)>>2),
-        (unsigned char)((vecInput_2.y)>>2),
-        (unsigned char)((vecInput_2.z)>>2),
-        (unsigned char)((vecInput_2.w)>>2)
+        (static_cast<signed char>(vecInput_1.x>>2)),
+        (static_cast<signed char>(vecInput_1.y>>2)),
+        (static_cast<signed char>(vecInput_1.z>>2)),
+        (static_cast<signed char>(vecInput_1.w>>2)),
+        (static_cast<signed char>(vecInput_2.x>>2)),
+        (static_cast<signed char>(vecInput_2.y>>2)),
+        (static_cast<signed char>(vecInput_2.z>>2)),
+        (static_cast<signed char>(vecInput_2.w>>2))
     };
     ((char8*)(&to[loc]))[0] = write;
 }
