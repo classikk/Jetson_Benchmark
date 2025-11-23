@@ -5,3 +5,4 @@ camera
 main
 opencv2
 opencv2/*
+util/GPU.o

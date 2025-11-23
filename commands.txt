@@ -25,3 +25,15 @@ v4l2-ctl --list-formats-ext
 
 find /usr/include -name opencv.hpp
 
+
+CUDA
+https://forums.developer.nvidia.com/t/cuda-nvcc-not-found/118068
+
+If you used the Nano SD card image, then yes, it already has the CUDA Toolkit installed. Check under /usr/local/cuda to verify that it’s there.
+
+Check that your ~/.bashrc file has these lines at the end, and if not, add them and restart your terminal:
+
+$ export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
+$ export LD_LIBRARY_PATH=/usr/local/cuda/lib64\
+                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
