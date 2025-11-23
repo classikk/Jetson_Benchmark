@@ -29,10 +29,6 @@ void memcopy_CPU_to_GPU(void* from, void* to, int n_bytes){
     CHECK(cudaMemcpy(to, from, n_bytes, cudaMemcpyHostToDevice));
 }
 
-void cleanUp(){
-    cudaDeviceReset();
-}
-    
 static inline int divup(int a, int b) {
     return (a + b - 1)/b;
 }
@@ -50,9 +46,7 @@ __global__ void RG10toBW8(short* from, char* to,int width, int height){
     to[loc] = (char)(from[loc]>>2);
 }
 
-//#include "image.h"
 void process_GPU_RG10toBW8(char* data, char* result,int width,int height,int size){
-
     void* from = allocate_GPU(size);
     void* to   = allocate_GPU(height*width);
     memcopy_CPU_to_GPU(data,from,size);

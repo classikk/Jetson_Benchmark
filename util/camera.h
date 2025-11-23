@@ -13,7 +13,7 @@ private:
     const char* dev_name = "/dev/video0";
     const int width  = 1280;
     const int height = 720;
-    int n_buffers = 2;
+    constexpr static int n_buffers = 2;//should be 2 for low latency
     int next_frame_index = 0;
     int fd;
     int type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
@@ -155,9 +155,11 @@ private:
             perror("mmap failed");
             return false;
         }
-        if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
-            perror("Queue buffer failed");
-            return false;
+        if (i == 0){
+            if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
+                perror("Queue buffer failed");
+                return false;
+            }
         }
         return true;
     }
@@ -171,7 +173,7 @@ private:
         stream_is_on = true;
         return true;
     }
-    
+
     void record_new_image() {
         v4l2_buffer buf = get_v4l2_buffer(); 
         next_frame_index = (next_frame_index+1)%n_buffers;
