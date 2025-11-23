@@ -15,7 +15,7 @@ int main() {
     
     char* rgb = video_stream.get_frame().newCharArrToRGB();
     Timer t;
-    while (t.seconds() < 1.0){
+    while (t.seconds() < 30.0){
         t.benchmark(0);
         RG10 raw_frame = video_stream.get_frame();
         t.benchmark(1);
