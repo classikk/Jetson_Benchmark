@@ -1,0 +1,7 @@
+Nvidia jetson nano orin
+CPU: 
+    6-core arm Cortex A78AE v8.2 64 bit CPU
+    Max frequency 1.5Ghz  ??? https://www.aetina.com/products-detail.php?i=580
+GPU:
+    1024-core Nvidia Ampere architecture GPU with 32 Tensor cores
+    Max frequency 625 MHz ??? https://www.aetina.com/products-detail.php?i=580
