@@ -7,7 +7,6 @@
 
 using namespace std;
 int main() {
-    Timer t;
     Streamer video_stream(false);
     if (!video_stream.init_success){
         cout << "failed initialisation" << endl;
@@ -15,7 +14,8 @@ int main() {
     };
     
     char* rgb = video_stream.get_frame().newCharArrToRGB();
-    while (t.seconds() < 30.0){
+    Timer t;
+    while (t.seconds() < 1.0){
         t.benchmark(0);
         RG10 raw_frame = video_stream.get_frame();
         t.benchmark(1);
@@ -26,6 +26,8 @@ int main() {
         display(frame);
         t.benchmark(3);
         t.total_frames += 1;
+        t.show_benchmark();
+        t.fps();
     }
     t.show_benchmark();
     t.fps();

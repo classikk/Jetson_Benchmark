@@ -3,7 +3,7 @@ set -e
 ./v4l2
 
 nvcc -Xcompiler -march=native -Xcompiler -fopenmp \
-     -Xcompiler -fsanitize=address -Xcompiler -O3 \
+     -Xcompiler -O3 \
      -lineinfo --use_fast_math -O3 \
      -o ./main main.cc util/GPU.cu \
     -I/usr/local/cuda/include \
@@ -33,10 +33,10 @@ nvcc -Xcompiler -march=native -Xcompiler -fopenmp \
 #    -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc \
 #    -Wno-error=deprecated-enum-enum-conversion \
 #    -Wno-deprecated-enum-enum-conversion
-./main
-
+#./main
+compute-sanitizer --leak-check full --tool memcheck --report-api-errors all  ./main
 #-std=c++2a  -mavx512f  -fopenmp  -mavx512vl -mavx512bw -mavx512dq -masm=intel -fverbose-asm -Wall -Wextra -Wvla -Werror -Wno-error=unknown-pragmas -Wno-error=unused-but-set-variable -Wno-error=unused-local-typedefs -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=unused-variable -Wno-error=unused-parameter -Wno-error=unused-but-set-parameter -Wno-psabi -march=native -fdiagnostics-color=never
-#
+#-Xcompiler -fsanitize=address
 #-fsanitize=address
 #
 #    -I/usr/local/cuda/include \
