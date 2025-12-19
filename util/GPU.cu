@@ -36,6 +36,13 @@ static inline int divup(int a, int b) {
 
 constexpr int short_vec = 4;
 constexpr int char_vec = 8;
+constexpr int bitshift = 2;
+
+__device__ static inline signed char pixelOperation(short i){
+    //return (signed char)(((int)sqrt((double)(i))) & 0xFF);
+    //return (signed char)(((int)sqrtf((float)(i>>2))) & 0xFF);
+    return static_cast<signed char>(i>>8);//+(i&(1<<2))>>10);
+}
 
 typedef struct { signed char x, y, z, w, a, b, c, d; } char8;
 __global__ void RG10toBW8(short* from, char* to,int width, int height){
@@ -43,7 +50,7 @@ __global__ void RG10toBW8(short* from, char* to,int width, int height){
     int y = threadIdx.y+blockDim.y*blockIdx.y;
     int loc = x+width*y;
     if (x >= width || y >= height) return;
-    to[loc] = (char)(from[loc]>>2);
+    to[loc] = pixelOperation(from[loc]);
 }
 __global__ void RG10toBW8_modulo4(short* from, char* to,int width, int height){
     int x = short_vec*(threadIdx.x+blockDim.x*blockIdx.x);
@@ -52,10 +59,10 @@ __global__ void RG10toBW8_modulo4(short* from, char* to,int width, int height){
     if (x >= width || y >= height) return;
     short4 vecInput_1 = ((const short4*)(&from[loc]))[0];
     char4 write{
-        static_cast<signed char>((vecInput_1.x)>>2),
-        static_cast<signed char>((vecInput_1.y)>>2),
-        static_cast<signed char>((vecInput_1.z)>>2),
-        static_cast<signed char>((vecInput_1.w)>>2)
+        pixelOperation(vecInput_1.x),
+        pixelOperation(vecInput_1.y),
+        pixelOperation(vecInput_1.z),
+        pixelOperation(vecInput_1.w)
     };
     ((char4*)(&to[loc]))[0] = write;
 }
@@ -67,14 +74,14 @@ __global__ void RG10toBW8_modulo8(short* from, char* to,int width, int height){
     short4 vecInput_1 = ((const short4*)(&from[loc]))[0];
     short4 vecInput_2 = ((const short4*)(&from[loc]))[1];
     char8 write{
-        (static_cast<signed char>(vecInput_1.x>>2)),
-        (static_cast<signed char>(vecInput_1.y>>2)),
-        (static_cast<signed char>(vecInput_1.z>>2)),
-        (static_cast<signed char>(vecInput_1.w>>2)),
-        (static_cast<signed char>(vecInput_2.x>>2)),
-        (static_cast<signed char>(vecInput_2.y>>2)),
-        (static_cast<signed char>(vecInput_2.z>>2)),
-        (static_cast<signed char>(vecInput_2.w>>2))
+        pixelOperation(vecInput_1.x),
+        pixelOperation(vecInput_1.y),
+        pixelOperation(vecInput_1.z),
+        pixelOperation(vecInput_1.w),
+        pixelOperation(vecInput_2.x),
+        pixelOperation(vecInput_2.y),
+        pixelOperation(vecInput_2.z),
+        pixelOperation(vecInput_2.w)
     };
     ((char8*)(&to[loc]))[0] = write;
 }

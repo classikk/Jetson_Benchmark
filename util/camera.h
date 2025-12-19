@@ -48,9 +48,9 @@ public:
         }
         
         // --- Cleanup ---
-        //for (__u32 i = 0; i < n_buffers; i++) {
-        //    munmap(buffers[i].start, buffers[i].info.size());
-        //}
+        for (__u32 i = 0; i < n_buffers; i++) {
+            munmap(buffers[i].start, buffers[i].info.size());
+        }
         delete[] buffers;
         close(fd);
     }
@@ -66,11 +66,11 @@ private:
     }
 
     bool init_steps(){
-        if (!init_device()) return false;
-        if (!init_fmt()) return false;
-        if (!init_request()) return false;
-        if (!init_map()) return false;
-        if (!init_start_stream()) return false;
+        if (!init_device())         return false;
+        if (!init_fmt())            return false;
+        if (!init_request())        return false;
+        if (!init_map())            return false;
+        if (!init_start_stream())   return false;
         return true;
     }
 
@@ -102,8 +102,8 @@ private:
         // --- Request buffers ---
         v4l2_requestbuffers req;
         memset(&req, 0, sizeof(req));
-        req.count = n_buffers;
-        req.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        req.count  = n_buffers;
+        req.type   = V4L2_BUF_TYPE_VIDEO_CAPTURE;
         req.memory = V4L2_MEMORY_MMAP;
 //        if (stream_to_gpu_pointer){
 //            req.memory = V4L2_MEMORY_DMABUF;
