@@ -1,5 +1,0 @@
-# VSCode
-
-# Docker
-
-# Confiqure cameras

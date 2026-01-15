@@ -9,6 +9,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN apt-get install -y libopencv-dev
 
+RUN apt-get install -y \
+    libcanberra-gtk-module \
+    libcanberra-gtk3-module
+
 WORKDIR /src
 
 COPY . .
