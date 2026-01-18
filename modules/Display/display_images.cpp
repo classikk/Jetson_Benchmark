@@ -4,6 +4,7 @@
 #include <opencv2/opencv.hpp>
 #include <cstdlib>
 #include "../util/pipe.cpp"
+#include "../util/timer.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 5) {
@@ -25,11 +26,13 @@ int main(int argc, char* argv[]) {
     int size = W * H * (RGB ? 3 : 2);
 
     cv::namedWindow("Viewer", cv::WINDOW_AUTOSIZE);
-
+    BenchMark t;
     while (true) {
         auto buffer = usePipe(pipe,size);
+        t.step_Completed();
         pipe.read(reinterpret_cast<char*>(buffer.data()), buffer.size());
         if (!pipe) break;
+        t.step_Completed();
         if (RGB){
             cv::Mat img(H, W, CV_8UC3, buffer.data());
             
@@ -39,6 +42,7 @@ int main(int argc, char* argv[]) {
 
             cv::imshow("Viewer", img);
         }
+        t.cycle_Completed();
 
         if (cv::waitKey(1) == 27) break; // ESC to exit
     }

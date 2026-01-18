@@ -25,12 +25,11 @@ int main(int argc, char* argv[]) {
     };
 
     PointIntFunc getVideo = [&video_stream]() -> std::tuple<char*, int> {
-        RG10 raw_frame = video_stream.get_frame();
-        return { raw_frame.start, raw_frame.info.size() };
+        IMG raw_frame = video_stream.get_frame();
+        return { raw_frame.data, raw_frame.size() };
     };
 
     createPipe(pipeName,getVideo);
     
-    video_stream.cleanUp();
     return 0;
 }

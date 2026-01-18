@@ -1,8 +1,2 @@
-video.raw
-FILE.raw
-Assembly.txt
-camera
-main
-opencv2
-opencv2/*
-util/GPU.o
+*.raw
+*.o

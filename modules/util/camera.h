@@ -18,7 +18,7 @@ private:
     int fd;
     int type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
     v4l2_format fmt;
-    RG10* buffers = new RG10[n_buffers]; 
+    std::vector<IMG> buffers; 
     bool stream_is_on = false;
     bool stream_to_gpu_pointer;
 public:
@@ -28,7 +28,20 @@ public:
         init_success = init();
     }
 
-    RG10 get_frame() {
+    ~Streamer() {
+        // --- Stop streaming ---
+        if (stream_is_on){
+            if (ioctl(fd, VIDIOC_STREAMOFF, &type) < 0) perror("Stream off failed");
+        }
+        
+        // --- Cleanup ---
+        for (__u32 i = 0; i < n_buffers; i++) {
+            munmap(buffers[i].data, buffers[i].size());
+        }
+        close(fd);
+    }
+
+    IMG get_frame() {
         v4l2_buffer buf = get_v4l2_buffer(next_frame_index);
 
         if (ioctl(fd, VIDIOC_DQBUF, &buf) < 0) {
@@ -41,27 +54,12 @@ public:
     }
     
 
-    void cleanUp() {
-        // --- Stop streaming ---
-        if (stream_is_on){
-            if (ioctl(fd, VIDIOC_STREAMOFF, &type) < 0) perror("Stream off failed");
-        }
-        
-        // --- Cleanup ---
-        for (__u32 i = 0; i < n_buffers; i++) {
-            munmap(buffers[i].start, buffers[i].info.size());
-        }
-        delete[] buffers;
-        close(fd);
-    }
-
 private:
 
     bool init(){
         if (init_steps()){
             return true;
         }
-        cleanUp();
         return false;
     }
 
@@ -117,57 +115,48 @@ private:
         }
         return true;
     }
-    void set_image_info_RG10(){
-        IMG_info info(width,height,RG10::pix_width,stream_to_gpu_pointer);
-        for (__u32 i = 0; i < n_buffers; i++) {
-            buffers[i].info = info;
-        }
-    }
 
     bool init_map(){
-        set_image_info_RG10();
         for (__u32 i = 0; i < n_buffers; i++) {
-            if (!init_map_pointer(i)) return false;
-        }
-        return true;
-    }
+            v4l2_buffer buf = get_v4l2_buffer(i);
 
-    bool init_map_pointer(int i){
-        v4l2_buffer buf = get_v4l2_buffer(i);
-
-        if (ioctl(fd, VIDIOC_QUERYBUF, &buf) < 0) {
-            perror("Query buffer failed");
-            return false;
-        }
-
-        if (buffers[i].info.size() != buf.length) {
-            perror("Incorrect image size");
-            cout << "Expecting image with total size of bytes = " << buffers[i].info.size() << endl;
-            cout << "Recieved  image with total size of bytes = " << buf.length             << endl;
-            return false;
-        }
-        buffers[i].start = (char*)mmap(NULL, buf.length, PROT_READ | PROT_WRITE,
-                                        MAP_SHARED, fd, buf.m.offset);
-        
-        //if (stream_to_gpu_pointer){
-        //    //buffers[i].start =
-        //}else{
-        //    buffers[i].start = (char*)mmap(NULL, buf.length, PROT_READ | PROT_WRITE,
-        //                                    MAP_SHARED, fd, buf.m.offset);
-        //}
-        
-        if (buffers[i].start == MAP_FAILED) {
-            perror("mmap failed");
-            return false;
-        }
-        if (i == 0){
-            if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
-                perror("Queue buffer failed");
+            if (ioctl(fd, VIDIOC_QUERYBUF, &buf) < 0) {
+                perror("Query buffer failed");
                 return false;
+            }
+            char* data = (char*)mmap(NULL, buf.length, PROT_READ | PROT_WRITE,
+                                            MAP_SHARED, fd, buf.m.offset);
+
+            if (data == MAP_FAILED) {
+                perror("mmap failed");
+                return false;
+            }
+            buffers.push_back({data,width,height,2});
+
+            if (buffers[i].size() != buf.length) {
+                perror("Incorrect image size");
+                cout << "Expecting image with total size of bytes = " << buffers[i].size() << endl;
+                cout << "Recieved  image with total size of bytes = " << buf.length             << endl;
+                return false;
+            }
+            
+            //if (stream_to_gpu_pointer){
+            //    //buffers[i].start =
+            //}else{
+            //    buffers[i].start = (char*)mmap(NULL, buf.length, PROT_READ | PROT_WRITE,
+            //                                    MAP_SHARED, fd, buf.m.offset);
+            //}
+            
+            if (i == 0){
+                if (ioctl(fd, VIDIOC_QBUF, &buf) < 0) {
+                    perror("Queue buffer failed");
+                    return false;
+                }
             }
         }
         return true;
     }
+
     
     bool init_start_stream(){
         // --- Start streaming ---
@@ -195,4 +184,6 @@ private:
         buf.index = index;
         return buf;
     }
+
+    
 };
