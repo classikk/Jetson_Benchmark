@@ -4,10 +4,10 @@
 #include <fstream>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "../util/camera.h"
 #include <functional>
-#include "../util/pipe.cpp"
 #include <tuple>
+#include "../util/camera.h"
+#include "../util/pipe.cpp"
 
 using namespace std;
 
