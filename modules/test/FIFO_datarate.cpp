@@ -37,13 +37,7 @@ int main(int argc, char* argv[]) {
     BenchMark t;
     while (!stop) {
         auto buffer = usePipe(pipe,size);
-        t.step_Completed();
-        cv::Mat img(H, W, CV_8UC3, buffer.data());
-        
-        cv::imshow("Viewer", img);
         t.cycle_Completed();
-
-        if (cv::waitKey(1) == 27) break; // ESC to exit
     }
 
     return 0;

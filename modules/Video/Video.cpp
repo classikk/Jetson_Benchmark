@@ -26,7 +26,7 @@ VideoData extractFramesAsRGB(const std::string& filename) {
 
     cv::Mat frame;//, rgb;
     int i = 0;
-    while (true) {
+    while (i < 1200) {
         if (!cap.read(frame)) {
             break;  // No more frames
         }
