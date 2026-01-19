@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-using RGBFrame = std::vector<char>;
+using RGBFrame = std::vector<uint8_t>;
 
 struct VideoData {
     int width;
@@ -22,20 +22,24 @@ VideoData extractFramesAsRGB(const std::string& filename) {
     // Read resolution from metadata
     result.width  = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
     result.height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+    std::cout << result.width << ", " << result.height << ", RGB" << std::endl;
 
-    cv::Mat frame, rgb;
-
+    cv::Mat frame;//, rgb;
+    int i = 0;
     while (true) {
         if (!cap.read(frame)) {
             break;  // No more frames
         }
-
+        if (frame.empty()) {
+            std::cerr << "Empty frame\n";
+        }
+        i++;
         // Convert BGR → RGB
-        cv::cvtColor(frame, rgb, cv::COLOR_BGR2RGB);
+        //cv::cvtColor(frame, rgb, cv::COLOR_BGR2RGB);
 
         // Flatten into a vector<uint8_t>
         RGBFrame buffer;
-        buffer.assign(rgb.data, rgb.data + rgb.total() * rgb.elemSize());
+        buffer.assign(frame.data, frame.data + frame.total() * frame.elemSize());
 
         result.frames.push_back(std::move(buffer));
     }
@@ -67,11 +71,69 @@ int main(int argc, char* argv[]) {
     auto index = 0;
     PointIntFunc getVideo = [&video,&index]() -> std::tuple<char*, int> {
         if (video.frames.size() == index) index = 0;
-        return { video.frames[index].data(), video.width*video.height*3 };
-        index++;
+        return { reinterpret_cast<char*>(video.frames[index++].data()), video.width*video.height*3 };
     };
 
     createPipe(pipeName,getVideo);
     
     return 0;
 }
+
+
+
+
+/*
+
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <fstream>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <functional>
+#include <tuple>
+#include "../util/pipe.cpp"
+
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <pipeName> <videoName>\n";
+        return 1;
+    }
+    const char* pipeName = argv[1];
+    const char* videoName = argv[2];
+    cv::VideoCapture cap(videoName);
+    if (!cap.isOpened()) {
+        throw std::runtime_error("Failed to open video file: " + std::string(videoName));
+    }
+
+    VideoData result;
+
+    // Read resolution from metadata
+    int width  = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
+    int height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+    
+    std::cout << width << ", " << height << ", RGB" << endl;
+
+    PointIntFunc getVideo = [&cap,&width,&height]() -> std::tuple<char*, int> {
+        cv::Mat frame, rgb;
+        if (!cap.read(frame)) {
+            return {(char*)(NULL), 0};  // No more frames
+        }
+
+        // Convert BGR → RGB
+        cv::cvtColor(frame, rgb, cv::COLOR_BGR2RGB);
+
+        // Flatten into a vector<uint8_t>
+        RGBFrame buffer;
+        buffer.assign(rgb.data, rgb.data + rgb.total() * rgb.elemSize());
+        return { buffer.data(), width*height*3 };
+    };
+
+    createPipe(pipeName,getVideo);
+    
+    return 0;
+}
+
+*/

@@ -22,7 +22,6 @@ struct BenchMark {
         auto end = std::chrono::steady_clock::now();
         double time = (double)(end-split).count()/1000000000;
         split = end;
-        cout << time << endl;
         return time;
     }
     inline double seconds(){

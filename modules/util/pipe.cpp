@@ -15,7 +15,7 @@ void createPipe(const char* pipeName, PointIntFunc func) {
     
     mkfifo(pipeName, 0666);
 
-    std::ofstream pipe(pipeName, std::ios::binary);
+    std::ofstream pipe(pipeName, std::ios::binary | std::ios::app);
     if (!pipe) {
         std::cerr << "Failed to open pipe\n";
         exit(1);
@@ -23,7 +23,7 @@ void createPipe(const char* pipeName, PointIntFunc func) {
 
     while (true){
         auto [pointer, size] = func();
-        if (!pipe) break;
+        if (pipe.fail()) { std::cerr << "Broken pipe detected\n"; break; }
         pipe.write(pointer, size);
         pipe.flush();
     }
