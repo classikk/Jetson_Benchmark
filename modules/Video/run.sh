@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./FIFO_datarate.o 1280 720 3 /tmp/imagepipe
+./video.o /tmp/imagepipe /home/catscanner/camera/testData/DroneTest.mp4
