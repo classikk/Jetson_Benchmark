@@ -26,19 +26,28 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Width: " << W << "\n";
     std::cout << "Height: " << H << "\n";
-    std::cout << "pixel_width: " << H << "\n";
+    std::cout << "pixel_width: " << pixel_width << "\n";
     std::cout << "Pipe: " << pipeName << "\n";
 
     std::ifstream pipe = makePipe(pipeName);
     
     int size = W * H * pixel_width;
 
+    int frameType = CV_8UC3;
+    if (pixel_width == 3 ){
+        frameType = CV_8UC3;
+    } else if (pixel_width == 2 ){
+        frameType = CV_16UC1;
+    } else {
+        frameType = CV_8UC1;
+    }
+
     cv::namedWindow("Viewer", cv::WINDOW_AUTOSIZE);
     BenchMark t;
     while (!stop) {
         auto buffer = usePipe(pipe,size);
         t.step_Completed();
-        cv::Mat img(H, W, CV_8UC3, buffer.data());
+        cv::Mat img(H, W, frameType, buffer.data());
         
         cv::imshow("Viewer", img);
         t.cycle_Completed();
