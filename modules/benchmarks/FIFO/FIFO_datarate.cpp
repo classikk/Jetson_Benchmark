@@ -2,8 +2,8 @@
 #include <fstream>
 #include <vector>
 #include <cstdlib>
-#include "../util/pipe.cpp"
-#include "../util/timer.h"
+#include "../../util/pipe.cpp"
+#include "../../util/timer.h"
 
 #include <signal.h>
 volatile sig_atomic_t stop = 0;

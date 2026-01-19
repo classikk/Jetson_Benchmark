@@ -15,7 +15,7 @@ void createPipe(const char* pipeName, PointIntFunc func) {
     
     mkfifo(pipeName, 0666);
 
-    std::ofstream pipe(pipeName, std::ios::binary | std::ios::app);
+    std::ofstream pipe(pipeName, std::ios::binary);
     if (!pipe) {
         std::cerr << "Failed to open pipe\n";
         exit(1);
