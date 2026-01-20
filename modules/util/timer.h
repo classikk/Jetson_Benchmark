@@ -13,6 +13,7 @@ struct BenchMark {
     std::chrono::time_point<std::chrono::steady_clock> benchMark = std::chrono::steady_clock::now();
     int totalIters = 0;
     std::vector<double> arr;
+    std::vector<const char*> descr;
     int step = 0;
     ~BenchMark(){
         show_benchmark();
@@ -29,22 +30,23 @@ struct BenchMark {
         return (double)(end-start).count()/1000000000;
     }
 
-    inline void step_Completed(){
+    inline void step_Completed(const char* info = ""){
         if (step == arr.size()) {
             arr.push_back(0.0);
+            descr.push_back(info);
         } 
         arr[step] += time_split(benchMark);
         step += 1;
     }
-    inline void cycle_Completed(){
-        step_Completed();
+    inline void cycle_Completed(const char* info = ""){
+        step_Completed(info);
         totalIters += 1;
         step = 0;
     }
 
     inline void show_benchmark(){
         for (int i = 0; i < arr.size(); i++){
-            cout << "[" << arr[i]/totalIters << "s]\taverage on [" << i << "]" << endl;
+            cout << "[" << arr[i]/totalIters << "s]\taverage on step [" << i << "] " << descr[i] << endl;
         }
     }
     inline void fps(){

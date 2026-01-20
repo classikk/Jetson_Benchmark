@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include "../../util/pipe.cpp"
 #include "../../util/timer.h"
-
+#include <iostream>
 #include <signal.h>
 volatile sig_atomic_t stop = 0;
 void handle_sigint(int sig) {
