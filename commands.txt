@@ -51,3 +51,29 @@ git lfs install --skip-repo
 mkdir -p  ~/workspaces/isaac_ros-dev/src
 echo "export ISAAC_ROS_WS=${HOME}/workspaces/isaac_ros-dev/" >> ~/.bashrc
 source ~/.bashrc
+
+
+// FROM https://nvidia-isaac-ros.github.io/v/release-3.1/getting_started/isaac_apt_repository.html
+locale  # check for UTF-8
+
+sudo apt update && sudo apt install locales
+sudo locale-gen en_US en_US.UTF-8
+sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+locale  # verify settings
+
+sudo apt update && sudo apt install gnupg wget
+sudo apt install software-properties-common
+sudo add-apt-repository universe
+
+
+wget -qO - https://isaac.download.nvidia.com/isaac-ros/repos.key | sudo apt-key add -
+grep -qxF "deb https://isaac.download.nvidia.com/isaac-ros/release-3 $(lsb_release -cs) legacy-release-3.1" /etc/apt/sources.list || \
+echo "deb https://isaac.download.nvidia.com/isaac-ros/release-3 $(lsb_release -cs) legacy-release-3.1" | sudo tee -a /etc/apt/sources.list
+sudo apt-get update
+
+sudo apt update && sudo apt install curl -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
