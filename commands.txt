@@ -37,3 +37,17 @@ $ export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
 $ export LD_LIBRARY_PATH=/usr/local/cuda/lib64\
                          ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
+gst-launch-1.0 nvarguscamerasrc  ! nv3dsink -e
+gst-launch-1.0 nvarguscamerasrc ! nvvidconv ! videoconvert ! nv3dsink -e
+
+
+Set up isaac ros
+// FROM https://nvidia-isaac-ros.github.io/v/release-3.1/getting_started/dev_env_setup.html
+sudo systemctl daemon-reload && sudo systemctl restart docker
+
+sudo apt-get install git-lfs
+git lfs install --skip-repo
+
+mkdir -p  ~/workspaces/isaac_ros-dev/src
+echo "export ISAAC_ROS_WS=${HOME}/workspaces/isaac_ros-dev/" >> ~/.bashrc
+source ~/.bashrc

@@ -48,8 +48,16 @@ int main(int argc, char* argv[]) {
         auto buffer = usePipe(pipe,size);
         t.step_Completed();
         cv::Mat img(H, W, frameType, buffer.data());
+        if (frameType == CV_16UC1){
+            //cv::Mat bgr;
+            //cv::cvtColor(img, bgr, cv::COLOR_BayerRG2BGR);
+            cv::imshow("Viewer", img);
+
+        }else {
+            cv::imshow("Viewer", img);
+        }
+
         
-        cv::imshow("Viewer", img);
         t.cycle_Completed();
 
         if (cv::waitKey(1) == 27) break; // ESC to exit

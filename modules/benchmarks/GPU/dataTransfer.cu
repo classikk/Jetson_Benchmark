@@ -33,12 +33,12 @@ int main(int argc, char* argv[]) {
         synchronize();
         t.step_Completed("memcopy_CPU_to_GPU");
 
-        int dummyMatrix = (w>h? h : w )/3;
-        dummyMatrix = dummyMatrix > 1 ? 1 : dummyMatrix;
-        matMul((float*)gpu,(float*)gpu,(float*)gpu,dummyMatrix,dummyMatrix,dummyMatrix); 
-        afterKernelCallCheckErrors();
-        synchronize();
-        t.step_Completed("random operation to ensure it does not get optimized away.");
+        //int dummyMatrix = (w>h? h : w )/3;
+        //dummyMatrix = dummyMatrix > 1 ? 1 : dummyMatrix;
+        //matMul((float*)gpu,(float*)gpu,(float*)gpu,dummyMatrix,dummyMatrix,dummyMatrix); 
+        //afterKernelCallCheckErrors();
+        //synchronize();
+        //t.step_Completed("random operation to ensure it does not get optimized away.");
 
         memcopy_GPU_to_CPU(gpu,data,size);
         synchronize();
