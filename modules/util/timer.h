@@ -17,7 +17,7 @@ struct BenchMark {
     int step = 0;
     ~BenchMark(){
         show_benchmark();
-        fps();
+        cout << fps() << "fps" << endl;
     }
     inline double time_split(std::chrono::time_point<std::chrono::steady_clock> &split){
         auto end = std::chrono::steady_clock::now();
@@ -49,8 +49,8 @@ struct BenchMark {
             cout << "[" << arr[i]/totalIters << "s]\taverage on step [" << i << "] " << descr[i] << endl;
         }
     }
-    inline void fps(){
-        cout << totalIters/seconds() << "fps" << endl;
+    inline double fps(){
+        return totalIters/seconds();
     }
 };
 

@@ -13,12 +13,12 @@ static inline void check(cudaError_t err, const char* context) {
 
 void* allocate_GPU(int n_bytes){
     void* dataGPU = NULL;
-    CHECK(cudaMalloc((void**)&dataGPU, n_bytes));
+    CHECK(cudaMallocHost((void**)&dataGPU, n_bytes));
     return dataGPU;
 }
 
 void deallocate_GPU(void* mem){
-    CHECK(cudaFree(mem));
+    CHECK(cudaFreeHost(mem));
 }
 
 void memcopy_GPU_to_CPU(void* from, void* to, int n_bytes){

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./dataTransfer.o 1000000 10
+./dataTransfer.o 1280 720 3
