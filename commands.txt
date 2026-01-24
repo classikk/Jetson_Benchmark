@@ -77,3 +77,28 @@ sudo apt update && sudo apt install curl -y
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
 
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+
+sudo apt update
+
+sudo apt install ros-humble-desktop
+
+sudo apt install ros-dev-tools
+
+// FROM https://nvidia-isaac-ros.github.io/v/release-3.1/repositories_and_packages/isaac_ros_argus_camera/isaac_ros_argus_camera/index.html#quickstart
+
+cd ${ISAAC_ROS_WS}/src &&    git clone -b release-3.1 https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common.git isaac_ros_common
+
+cd ${ISAAC_ROS_WS}/src && \
+   git clone -b release-3.1 https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_argus_camera.git isaac_ros_argus_camera
+
+cd ${ISAAC_ROS_WS}/src && \
+   git clone -b release-3.1 https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nitros.git isaac_ros_nitros
+
+sudo rosdep init
+rosdep update
+
+source /opt/ros/humble/setup.bash
+
+rosdep install --from-paths ${ISAAC_ROS_WS}/src/isaac_ros_argus_camera --ignore-src -y --rosdistro humble
+
+
