@@ -13,7 +13,7 @@ sudo python /opt/nvidia/jetson-io/jetson-io.py
 |                          Save pin changes                          |
 |                Save and reboot to reconfigure pins                 |
 
-git config --global lassi04kokkonen@gmail.com
+git config --global user.email lassi04kokkonen@gmail.com
 git config --global user.name classikk
 git remote add origin git@github.com:classikk/Jetson.git
 ls -al ~/.ssh
