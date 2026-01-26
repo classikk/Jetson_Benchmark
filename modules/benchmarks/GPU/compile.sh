@@ -1,5 +1,6 @@
 #!/bin/bash
-nvcc dataTransfer.cu -o ./dataTransfer.o \
+
+/usr/local/cuda/bin/nvcc dataTransfer.cu -o ./dataTransfer.o \
     -Xcompiler -march=native -Xcompiler -fopenmp \
     -I/usr/local/cuda/include \
     -L/usr/local/cuda/lib64 -lcudart\
