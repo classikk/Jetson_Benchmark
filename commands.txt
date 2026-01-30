@@ -4,6 +4,10 @@ ls -l /dev/video*
 
 sudo apt install v4l-utils
 v4l2-ctl --list-devices
+v4l2-ctl --list-formats-ext
+
+find /usr/include -name opencv.hpp
+
 
 git config --global user.email lassi04kokkonen@gmail.com
 git config --global user.name classikk
@@ -13,23 +17,8 @@ ssh-keygen -t ed25519 -C "lassi04kokkonen@gmail.com"
 #copy this to git
 cat ~/.ssh/id_ed25519.pub 
 
-v4l2-ctl --list-formats-ext
 
-find /usr/include -name opencv.hpp
-
-
-CUDA
-https://forums.developer.nvidia.com/t/cuda-nvcc-not-found/118068
-
-If you used the Nano SD card image, then yes, it already has the CUDA Toolkit installed. Check under /usr/local/cuda to verify that it’s there.
-
-Check that your ~/.bashrc file has these lines at the end, and if not, add them and restart your terminal:
-
-$ export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
-$ export LD_LIBRARY_PATH=/usr/local/cuda/lib64\
-                         ${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-
-gst-launch-1.0 nvarguscamerasrc  ! nv3dsink -e
+gst-launch-1.0 nvarguscamerasrc ! nv3dsink -e
 gst-launch-1.0 nvarguscamerasrc ! nvvidconv ! videoconvert ! nv3dsink -e
 
 
